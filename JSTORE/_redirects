@@ -1,0 +1,4 @@
+/*    /index.html   200
+
+# Optional: block access to Netlify admin paths if you use them
+/_admin/*  /index.html  200

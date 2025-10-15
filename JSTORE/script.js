@@ -90,6 +90,16 @@ document.addEventListener("DOMContentLoaded", () => {
       mobileMenu.classList.add("hidden");
     }
     window.scrollTo(0, 0);
+    // Push the state so deep links and browser navigation work
+    try {
+      const url = new URL(window.location.href);
+      // prefer hash for in-page navigation; otherwise use pathname
+      if (url.hash !== `#${pageId}`) {
+        history.pushState({ page: pageId }, "", `#${pageId}`);
+      }
+    } catch (err) {
+      // ignore URL parsing errors in older browsers
+    }
   }
 
   navLinks.forEach((link) => {
@@ -100,6 +110,57 @@ document.addEventListener("DOMContentLoaded", () => {
         showPage(pageId);
       }
     });
+  });
+
+  // Handle deep links on page load (either pathname like /shop or hash like #shop)
+  (function handleDeepLinkOnLoad() {
+    try {
+      const url = new URL(window.location.href);
+      let pageId = "";
+      if (url.hash && url.hash.length > 1) {
+        pageId = url.hash.slice(1); // remove '#'
+      } else {
+        // If the site is served from a path like /shop, try to use the first path segment
+        const path = url.pathname.replace(/^\/|\/$/g, ""); // trim slashes
+        if (path) {
+          // If path equals index.html or empty, default to home
+          if (path === "index.html") {
+            pageId = "home";
+          } else {
+            // For routes like /shop or /categories, pick the first segment
+            pageId = path.split("/")[0];
+          }
+        }
+      }
+
+      if (pageId) {
+        // Normalize pageId for known pages (home, shop, categories, deals, contact)
+        const known = ["home", "shop", "categories", "deals", "contact"];
+        if (!known.includes(pageId) && pageId.endsWith(".html")) {
+          // if a direct file like login.html was requested, don't try to show a section
+          return;
+        }
+        showPage(pageId);
+      }
+    } catch (err) {
+      // ignore URL parse errors
+    }
+  })();
+
+  // Handle back/forward navigation
+  window.addEventListener("popstate", (event) => {
+    const statePage = event.state && event.state.page;
+    if (statePage) {
+      showPage(statePage);
+    } else {
+      // fallback to hash or home
+      const hash = window.location.hash;
+      if (hash && hash.length > 1) {
+        showPage(hash.slice(1));
+      } else {
+        showPage("home");
+      }
+    }
   });
 
   // --- Services Slider Logic ---

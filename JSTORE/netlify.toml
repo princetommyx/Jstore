@@ -1,0 +1,12 @@
+# Netlify configuration for a static site served from the repository root
+# This makes Netlify serve index.html for all routes (SPA friendly)
+[build]
+  publish = "."
+  # No build command for plain static site — set if you use a build tool (npm run build)
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = true
