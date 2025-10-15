@@ -33,7 +33,7 @@
             <p class="text-gray-500">Start your shopping adventure with us today!</p>
         </div>
 
-        <form action="#" method="POST">
+        <form id="signup-form" action="#" method="POST">
             <div class="mb-5">
                 <label for="fullname" class="block mb-2 text-sm font-medium text-gray-600">Full Name</label>
                 <input type="text" name="fullname" id="fullname"
@@ -101,7 +101,13 @@
             var id_token = googleUser.getAuthResponse().id_token;
             console.log("ID Token for backend: " + id_token);
 
-            // On successful sign-up, redirect to the main store page
+            // On successful sign-up, set a simple client-side flag and redirect to the main store page
+            try {
+                localStorage.setItem('jshop_logged_in', 'true');
+                localStorage.setItem('jshop_user_email', profile.getEmail() || '');
+            } catch (err) {
+                console.warn('localStorage not available', err);
+            }
             window.location.href = 'index.html';
         }
 
@@ -133,6 +139,23 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             attachSignup(document.getElementById('google-signup-btn'));
+
+            // Handle regular sign-up form: set a simple logged-in flag and redirect
+            const signupForm = document.getElementById('signup-form');
+            if (signupForm) {
+                signupForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const emailInput = document.getElementById('email');
+                    const email = emailInput ? emailInput.value : '';
+                    try {
+                        localStorage.setItem('jshop_logged_in', 'true');
+                        localStorage.setItem('jshop_user_email', email);
+                    } catch (err) {
+                        console.warn('localStorage not available', err);
+                    }
+                    window.location.href = 'index.html';
+                });
+            }
         });
     </script>
 </body>

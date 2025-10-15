@@ -3,6 +3,57 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize Lucide icons
   lucide.createIcons();
 
+  // --- User area: show welcome + logout when logged in ---
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function updateUserArea() {
+    const userArea = document.getElementById("user-area");
+    if (!userArea) return;
+    const loggedIn = localStorage.getItem("jshop_logged_in") === "true";
+    const email = localStorage.getItem("jshop_user_email") || "";
+    if (loggedIn) {
+      userArea.innerHTML = "";
+      const welcome = document.createElement("span");
+      welcome.className = "text-sm hidden sm:inline";
+      welcome.textContent = email ? `Welcome, ${email}` : "Welcome";
+      const logoutBtn = document.createElement("button");
+      logoutBtn.id = "logout-btn";
+      logoutBtn.className =
+        "ml-2 text-gray-600 hover:text-orange-600 text-sm font-medium";
+      logoutBtn.textContent = "Logout";
+      logoutBtn.addEventListener("click", function () {
+        try {
+          localStorage.removeItem("jshop_logged_in");
+          localStorage.removeItem("jshop_user_email");
+        } catch (err) {
+          console.warn("localStorage not available", err);
+        }
+        // Redirect to login page
+        window.location.href = "login.html";
+      });
+      userArea.appendChild(welcome);
+      userArea.appendChild(logoutBtn);
+    } else {
+      userArea.innerHTML = "";
+      const loginLink = document.createElement("a");
+      loginLink.href = "login.html";
+      loginLink.className =
+        "text-gray-600 hover:text-orange-600 text-sm font-medium";
+      loginLink.textContent = "Login";
+      userArea.appendChild(loginLink);
+    }
+  }
+
+  // Initial user-area render
+  updateUserArea();
+
   // Mobile menu toggle
   const mobileMenuButton = document.getElementById("mobile-menu-button");
   const mobileMenu = document.getElementById("mobile-menu");

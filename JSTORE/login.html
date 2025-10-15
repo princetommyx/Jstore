@@ -33,7 +33,7 @@
             <p class="text-gray-500">Sign in to continue your shopping journey.</p>
         </div>
 
-        <form action="#" method="POST">
+        <form id="login-form" action="#" method="POST">
             <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-600">Email Address</label>
                 <input type="email" name="email" id="email"
@@ -102,7 +102,13 @@
 
             // Here you would typically send the id_token to your backend server
             // to verify it and create a session for the user.
-            // For now, we'll just redirect to the main page.
+            // For now, we'll set a simple client-side flag and redirect to the main page.
+            try {
+                localStorage.setItem('jshop_logged_in', 'true');
+                localStorage.setItem('jshop_user_email', profile.getEmail() || '');
+            } catch (err) {
+                console.warn('localStorage not available', err);
+            }
             window.location.href = 'index.html';
         }
 
@@ -132,9 +138,26 @@
             });
         }
 
-        // Wait for the DOM to load before attaching the click handler
+        // Wait for the DOM to load before attaching the click handler and form handler
         document.addEventListener("DOMContentLoaded", function () {
             attachSignin(document.getElementById('google-signin-btn'));
+
+            // Handle regular email/password login: set a simple logged-in flag and redirect
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const emailInput = document.getElementById('email');
+                    const email = emailInput ? emailInput.value : '';
+                    try {
+                        localStorage.setItem('jshop_logged_in', 'true');
+                        localStorage.setItem('jshop_user_email', email);
+                    } catch (err) {
+                        console.warn('localStorage not available', err);
+                    }
+                    window.location.href = 'index.html';
+                });
+            }
         });
     </script>
 </body>
