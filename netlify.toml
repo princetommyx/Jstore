@@ -1,0 +1,13 @@
+# This file provides build and deploy settings for Netlify.
+
+[build]
+  # This setting tells Netlify that your website's files (index.html, etc.)
+  # are in the main root directory of your project.
+  # A "." means the root directory.
+  publish = "."
+
+# The settings below are for "pretty URLs," which let you visit pages
+# without the .html extension (e.g., yoursite.com/login).
+# Netlify's post-processing usually handles this, but this makes it explicit.
+[dev]
+  framework = "#static"

@@ -1,0 +1,96 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* --- Improved Hero Section --- */
+.hero-bg {
+  background-image: url("https://placehold.co/1920x1080/6366f1/e0e7ff?text=Modern+Store");
+  background-size: cover;
+  background-position: center;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out 0.4s forwards;
+  opacity: 0; /* Start hidden */
+}
+
+/* --- Page Navigation --- */
+.page-section {
+  display: none;
+}
+.page-section.active {
+  display: block;
+}
+.nav-link.active {
+  color: #ea580c; /* orange-600 */
+  font-weight: 600;
+}
+
+/* --- Service Slider --- */
+.service-slide {
+  flex-shrink: 0;
+}
+
+/* --- Chatbot Styles --- */
+#chat-window {
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform-origin: bottom right;
+}
+#chat-window.hidden {
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+#chat-messages {
+  scroll-behavior: smooth;
+}
+
+.chat-message {
+  margin-bottom: 1rem;
+  display: flex;
+}
+.chat-message p {
+  padding: 0.75rem 1rem;
+  border-radius: 1rem;
+  max-width: 80%;
+}
+.chat-message.user {
+  justify-content: flex-end;
+}
+.chat-message.user p {
+  background-color: #fb923c; /* orange-400 */
+  color: white;
+  border-bottom-right-radius: 0.25rem;
+}
+.chat-message.bot p {
+  background-color: #e5e7eb; /* gray-200 */
+  color: #1f2937; /* gray-800 */
+  border-bottom-left-radius: 0.25rem;
+}
